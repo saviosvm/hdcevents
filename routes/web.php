@@ -15,10 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\EventController::class, 'index'])->name('event.index');
-Route::get('/event/create', [App\Http\Controllers\EventController::class, 'create']);
+Route::middleware('auth')->get('/event/create', [App\Http\Controllers\EventController::class, 'create'])->name('event.create');
 Route::get('/event/{id}', [App\Http\Controllers\EventController::class, 'show'])->name('event.show');
 Route::post('/event', [App\Http\Controllers\EventController::class, 'store'])->name('event.store');
 Route::get('/produtos', [App\Http\Controllers\ProdutoController::class, 'index']);
+
+Route::delete('/events/{id}',[App\Http\Controllers\EventController::class, 'destroy'])->name('event.destroy');
 
 
 
@@ -27,3 +29,4 @@ Route::get('/produtos_teste/{id?}', function ($id = null) {
 });
 
 
+Route::middleware('auth')->get('/dashboard',[App\Http\Controllers\EventController::class, 'dashboard'])->name('event.dashboard');
