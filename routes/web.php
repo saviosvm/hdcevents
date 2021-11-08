@@ -20,9 +20,11 @@ Route::get('/event/{id}', [App\Http\Controllers\EventController::class, 'show'])
 Route::post('/event', [App\Http\Controllers\EventController::class, 'store'])->name('event.store');
 Route::get('/produtos', [App\Http\Controllers\ProdutoController::class, 'index']);
 
-Route::delete('/events/{id}',[App\Http\Controllers\EventController::class, 'destroy'])->name('event.destroy');
+Route::middleware('auth')->delete('/events/{id}',[App\Http\Controllers\EventController::class, 'destroy'])->name('event.destroy');
+Route::middleware('auth')->get('/events/edit/{id}',[App\Http\Controllers\EventController::class, 'edit'])->name('event.edit');
+Route::middleware('auth')->put('/events/update/{id}',[App\Http\Controllers\EventController::class, 'update'])->name('event.update');
 
-
+Route::middleware('auth')->post('/events/join/{id}', [App\Http\Controllers\EventController::class, 'joinEvent'])->name('event.join');
 
 Route::get('/produtos_teste/{id?}', function ($id = null) {
     return view('layouts.product',['id' => $id]);

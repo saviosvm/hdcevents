@@ -15,12 +15,23 @@
                     <ion-icon name="location-outline"></ion-icon>{{ $event->cidade }}
                 </p>
                 <p class="event-participants">
-                    <ion-icon name="people-outline"></ion-icon>X Participantes
+                    <ion-icon name="people-outline"></ion-icon>{{count($event->users)}} Particpantes <!--Conta quantos usuários existem no evento-->
                 </p>
                 <p class="event-dono">
                     <ion-icon name="star-outline"></ion-icon>{{$eventDono['name']}}
                 </p>
-                <a href="#" class="btn btn-primary" id="event-submit">Confirmar presença</a>
+
+                <form action="{{route('event.join', ['id' => $event->id])}}" method="POST">
+                    @csrf
+                    <a href="{{route('event.join', ['id' => $event->id])}}"
+                       class="btn btn-primary" 
+                       id="event-submit"
+                       onclick="event.preventDefault();this.closest('form').submit();" >   <!--faz enviar como se fosse um botão submit -->
+                       Confirmar presença
+                    </a> 
+                    
+                </form>
+
                 <h3>O Evento conta com:</h3>
                 <ul id="items-list">
                     @foreach ($event->items as $item)

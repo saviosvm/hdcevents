@@ -7,7 +7,7 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -82,5 +82,44 @@ class EventController extends Controller
 
         return redirect()->route('event.dashboard')->with('msg', 'Evento Excluido com sucesso!');
 
+    }
+
+    public function edit($id){
+        $event = Event::findOrFail($id);
+
+        return view('events.edit', ['event' => $event]);
+
+    }
+
+    public function update(Request $request){
+
+        $data = $request->all();
+
+         // Image Upload
+         if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $requestImage = $request->image;
+            $extension = $requestImage->extension();
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+            $requestImage->move(public_path('img/events'), $imageName);
+
+            $data['image'] = $imageName;
+        }
+
+        Event::findOrFail($request->id)->update($data);
+        return redirect()->route('event.dashboard')->with('msg', 'Evento editado com sucesso!');
+
+
+    }
+
+    
+
+    public function joinEvent($id){
+        $user = auth()->user();
+        $user->eventsAsParticipant()->attach($id); //insere o id do evento no id do usuario
+
+        $event = Event::findOrFail($id);
+
+        return redirect()->route('event.dashboard')->with('msg', 'Sua presença está confirmada no evento'. $event->title);
+        
     }
 }
